@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orbit Planner</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero panel">
+        <div>
+          <p class="eyebrow">Orbit Planner</p>
+          <h1>Calendar + Task Tracking Command Center</h1>
+          <p class="hero-copy">
+            Plan work on the calendar, track your momentum, and use the Focus Forecast to find the best day for deep work.
+          </p>
+        </div>
+        <div class="hero-actions">
+          <button id="todayBtn" class="secondary-button" type="button">Jump to today</button>
+          <button id="seedBtn" class="secondary-button" type="button">Load sample plan</button>
+          <button id="exportBtn" class="primary-button" type="button">Export tasks</button>
+          <label class="primary-button file-button">
+            Import tasks
+            <input id="importInput" type="file" accept="application/json" />
+          </label>
+        </div>
+      </header>
+
+      <section class="summary-grid">
+        <article class="stat-card panel">
+          <span>Total tasks</span>
+          <strong id="totalTasks">0</strong>
+          <small id="totalTasksMeta">Across your schedule</small>
+        </article>
+        <article class="stat-card panel">
+          <span>Open today</span>
+          <strong id="dueToday">0</strong>
+          <small id="dueTodayMeta">Tasks still active</small>
+        </article>
+        <article class="stat-card panel">
+          <span>Completion rate</span>
+          <strong id="completionRate">0%</strong>
+          <small id="completionRateMeta">For all saved tasks</small>
+        </article>
+        <article class="stat-card panel focus-card">
+          <span>Focus Forecast</span>
+          <strong id="focusForecastTitle">No tasks yet</strong>
+          <small id="focusForecastMeta">Add tasks to get a smart recommendation</small>
+        </article>
+      </section>
+
+      <main class="layout">
+        <section class="calendar-column">
+          <section class="panel calendar-panel">
+            <div class="calendar-header">
+              <button id="prevMonthBtn" aria-label="Previous month" type="button">◀</button>
+              <div>
+                <h2 id="monthLabel"></h2>
+                <p id="selectionLabel"></p>
+              </div>
+              <button id="nextMonthBtn" aria-label="Next month" type="button">▶</button>
+            </div>
+            <div class="weekday-row" aria-hidden="true">
+              <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+            </div>
+            <div id="calendarGrid" class="calendar-grid" role="grid"></div>
+          </section>
+
+          <section class="panel upcoming-panel">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Next 7 days</p>
+                <h2>Upcoming workload</h2>
+              </div>
+              <p class="section-copy">See where your week is heavy or light at a glance.</p>
+            </div>
+            <div id="upcomingTimeline" class="upcoming-timeline"></div>
+          </section>
+        </section>
+
+        <section class="panel sidebar-panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Filters</p>
+              <h2>Task controls</h2>
+            </div>
+          </div>
+
+          <div class="filter-grid">
+            <label>
+              Search
+              <input id="searchInput" type="search" placeholder="Search titles or notes" />
+            </label>
+            <label>
+              Status
+              <select id="statusFilter">
+                <option value="all">All</option>
+                <option value="open">Open</option>
+                <option value="completed">Completed</option>
+              </select>
+            </label>
+            <label>
+              Priority
+              <select id="priorityFilter">
+                <option value="all">All priorities</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </label>
+            <label>
+              Category
+              <select id="categoryFilter">
+                <option value="all">All categories</option>
+              </select>
+            </label>
+          </div>
+
+          <form id="taskForm" class="task-form">
+            <div class="form-heading">
+              <h2 id="formTitle">Add task</h2>
+              <button id="cancelEditBtn" class="ghost-button hidden" type="button">Cancel edit</button>
+            </div>
+            <input id="editingTaskId" type="hidden" />
+            <label>
+              Title
+              <input id="taskTitle" name="title" type="text" maxlength="80" placeholder="Quarterly planning" required />
+            </label>
+            <div class="two-column-grid">
+              <label>
+                Date
+                <input id="taskDate" name="date" type="date" required />
+              </label>
+              <label>
+                Priority
+                <select id="taskPriority" name="priority">
+                  <option value="high">High</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="low">Low</option>
+                </select>
+              </label>
+            </div>
+            <div class="two-column-grid">
+              <label>
+                Category
+                <input id="taskCategory" name="category" type="text" maxlength="30" placeholder="Work, Health, Personal" />
+              </label>
+              <label>
+                Focus minutes
+                <input id="taskDuration" name="duration" type="number" min="0" max="480" step="15" value="30" />
+              </label>
+            </div>
+            <label>
+              Notes
+              <textarea id="taskNotes" name="notes" rows="3" maxlength="240" placeholder="Add relevant details"></textarea>
+            </label>
+            <label class="checkbox-row">
+              <input id="taskRecurring" name="recurring" type="checkbox" />
+              Repeat weekly for the next 4 weeks
+            </label>
+            <button class="primary-button" type="submit" id="saveTaskBtn">Save task</button>
+          </form>
+
+          <section class="task-list-panel">
+            <div class="task-list-header">
+              <div>
+                <h2>Tasks for <span id="taskListDateLabel"></span></h2>
+                <p id="taskListMeta" class="section-copy"></p>
+              </div>
+              <div class="stacked-actions">
+                <button id="clearCompletedBtn" class="ghost-button" type="button">Clear completed</button>
+                <button id="clearFiltersBtn" class="ghost-button" type="button">Reset filters</button>
+              </div>
+            </div>
+            <ul id="taskList" class="task-list"></ul>
+            <p id="emptyState" class="empty-state">No tasks match this day and filter combination yet.</p>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <template id="taskTemplate">
+      <li class="task-card">
+        <label class="task-main">
+          <input class="task-complete" type="checkbox" />
+          <span class="task-copy">
+            <span class="task-topline">
+              <strong class="task-title"></strong>
+              <span class="task-category chip"></span>
+            </span>
+            <span class="task-notes"></span>
+            <span class="task-details"></span>
+          </span>
+        </label>
+        <div class="task-meta">
+          <span class="priority-pill"></span>
+          <div class="task-actions">
+            <button class="edit-task ghost-button" type="button">Edit</button>
+            <button class="delete-task ghost-button" type="button">Delete</button>
+          </div>
+        </div>
+      </li>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
