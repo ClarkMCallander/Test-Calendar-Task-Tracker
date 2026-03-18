@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar Task Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Planner dashboard</p>
+          <h1>Calendar / Task Tracker</h1>
+          <p class="hero-copy">
+            Organize tasks by date, track completion, and keep your month in view.
+          </p>
+        </div>
+        <div class="hero-stats" aria-label="Task summary cards">
+          <article>
+            <span id="stat-total">0</span>
+            <p>Total tasks</p>
+          </article>
+          <article>
+            <span id="stat-open">0</span>
+            <p>Open</p>
+          </article>
+          <article>
+            <span id="stat-done">0</span>
+            <p>Completed</p>
+          </article>
+        </div>
+      </header>
+
+      <main class="dashboard">
+        <section class="panel calendar-panel">
+          <div class="panel-header">
+            <button id="prev-month" class="icon-button" aria-label="Previous month">←</button>
+            <div>
+              <p class="section-label">Monthly view</p>
+              <h2 id="month-label"></h2>
+            </div>
+            <button id="next-month" class="icon-button" aria-label="Next month">→</button>
+          </div>
+          <div class="weekday-row" aria-hidden="true">
+            <span>Sun</span>
+            <span>Mon</span>
+            <span>Tue</span>
+            <span>Wed</span>
+            <span>Thu</span>
+            <span>Fri</span>
+            <span>Sat</span>
+          </div>
+          <div id="calendar-grid" class="calendar-grid" role="grid"></div>
+        </section>
+
+        <section class="panel task-panel">
+          <div class="panel-header task-header">
+            <div>
+              <p class="section-label">Selected day</p>
+              <h2 id="selected-date-label"></h2>
+            </div>
+            <button id="today-button" class="secondary-button">Jump to today</button>
+          </div>
+
+          <form id="task-form" class="task-form">
+            <label>
+              Task title
+              <input id="task-title" name="title" type="text" maxlength="80" placeholder="e.g. Prepare project demo" required />
+            </label>
+            <label>
+              Details
+              <textarea id="task-notes" name="notes" rows="3" maxlength="240" placeholder="Optional notes"></textarea>
+            </label>
+            <div class="form-row">
+              <label>
+                Priority
+                <select id="task-priority" name="priority">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </label>
+              <button type="submit" class="primary-button">Add task</button>
+            </div>
+          </form>
+
+          <div class="toolbar">
+            <label>
+              Filter
+              <select id="task-filter">
+                <option value="all">All</option>
+                <option value="open">Open</option>
+                <option value="done">Completed</option>
+              </select>
+            </label>
+          </div>
+
+          <ul id="task-list" class="task-list" aria-live="polite"></ul>
+        </section>
+      </main>
+    </div>
+
+    <template id="task-item-template">
+      <li class="task-item">
+        <div class="task-main">
+          <label class="checkbox-row">
+            <input type="checkbox" class="task-toggle" />
+            <span class="task-title"></span>
+          </label>
+          <p class="task-notes"></p>
+        </div>
+        <div class="task-meta">
+          <span class="priority-badge"></span>
+          <button class="delete-button" aria-label="Delete task">Delete</button>
+        </div>
+      </li>
+    </template>
+
+    <script src="script.js"></script>
+  </body>
+</html>
