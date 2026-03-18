@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calendar Task Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Planner</p>
+          <h1>Calendar Task Tracker</h1>
+          <p class="hero-copy">
+            Organize tasks by day, monitor priorities, and keep your week in view.
+          </p>
+        </div>
+        <div class="hero-actions">
+          <button id="todayBtn" class="secondary-button">Jump to today</button>
+          <button id="seedBtn" class="primary-button">Load sample tasks</button>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="panel calendar-panel">
+          <div class="calendar-header">
+            <button id="prevMonthBtn" aria-label="Previous month">◀</button>
+            <div>
+              <h2 id="monthLabel"></h2>
+              <p id="selectionLabel"></p>
+            </div>
+            <button id="nextMonthBtn" aria-label="Next month">▶</button>
+          </div>
+          <div class="weekday-row" aria-hidden="true">
+            <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+          </div>
+          <div id="calendarGrid" class="calendar-grid" role="grid"></div>
+        </section>
+
+        <section class="panel sidebar-panel">
+          <div class="summary-grid">
+            <article>
+              <span>Total tasks</span>
+              <strong id="totalTasks">0</strong>
+            </article>
+            <article>
+              <span>Due today</span>
+              <strong id="dueToday">0</strong>
+            </article>
+            <article>
+              <span>Completed</span>
+              <strong id="completedTasks">0</strong>
+            </article>
+          </div>
+
+          <form id="taskForm" class="task-form">
+            <h2>Add task</h2>
+            <label>
+              Title
+              <input id="taskTitle" name="title" type="text" maxlength="80" placeholder="Quarterly planning" required />
+            </label>
+            <label>
+              Date
+              <input id="taskDate" name="date" type="date" required />
+            </label>
+            <label>
+              Priority
+              <select id="taskPriority" name="priority">
+                <option value="high">High</option>
+                <option value="medium" selected>Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </label>
+            <label>
+              Notes
+              <textarea id="taskNotes" name="notes" rows="3" maxlength="240" placeholder="Add relevant details"></textarea>
+            </label>
+            <button class="primary-button" type="submit">Save task</button>
+          </form>
+
+          <section class="task-list-panel">
+            <div class="task-list-header">
+              <h2>Tasks for <span id="taskListDateLabel"></span></h2>
+              <button id="clearCompletedBtn" class="ghost-button" type="button">Clear completed</button>
+            </div>
+            <ul id="taskList" class="task-list"></ul>
+            <p id="emptyState" class="empty-state">No tasks for this day yet.</p>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <template id="taskTemplate">
+      <li class="task-card">
+        <label class="task-main">
+          <input class="task-complete" type="checkbox" />
+          <span class="task-copy">
+            <strong class="task-title"></strong>
+            <span class="task-notes"></span>
+          </span>
+        </label>
+        <div class="task-meta">
+          <span class="priority-pill"></span>
+          <button class="delete-task ghost-button" type="button">Delete</button>
+        </div>
+      </li>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
