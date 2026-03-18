@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Momentum Planner</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero panel">
+        <div>
+          <p class="eyebrow">Momentum planner</p>
+          <h1>Calendar + task tracking, upgraded.</h1>
+          <p class="hero-copy">
+            Plan tasks on a visual calendar, track progress, filter by category, and use the built-in focus forecast to spot your best workdays.
+          </p>
+        </div>
+        <div class="hero-actions">
+          <button id="todayBtn" class="secondary-button" type="button">Jump to today</button>
+          <button id="seedBtn" class="primary-button" type="button">Load sample workspace</button>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="main-column">
+          <section class="panel metrics-panel">
+            <div class="metrics-grid">
+              <article>
+                <span>Total tasks</span>
+                <strong id="totalTasks">0</strong>
+              </article>
+              <article>
+                <span>Due today</span>
+                <strong id="dueToday">0</strong>
+              </article>
+              <article>
+                <span>Completion rate</span>
+                <strong id="completionRate">0%</strong>
+              </article>
+              <article>
+                <span>Current streak</span>
+                <strong id="currentStreak">0 days</strong>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel calendar-panel">
+            <div class="calendar-header">
+              <button id="prevMonthBtn" aria-label="Previous month" type="button">◀</button>
+              <div>
+                <h2 id="monthLabel"></h2>
+                <p id="selectionLabel"></p>
+              </div>
+              <button id="nextMonthBtn" aria-label="Next month" type="button">▶</button>
+            </div>
+            <div class="weekday-row" aria-hidden="true">
+              <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+            </div>
+            <div id="calendarGrid" class="calendar-grid" role="grid"></div>
+          </section>
+        </section>
+
+        <aside class="sidebar-column">
+          <section class="panel task-entry-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Task studio</p>
+                <h2>Add a task</h2>
+              </div>
+            </div>
+            <form id="taskForm" class="task-form">
+              <label>
+                Title
+                <input id="taskTitle" name="title" type="text" maxlength="80" placeholder="Ship dashboard polish" required />
+              </label>
+              <div class="form-row two-col">
+                <label>
+                  Date
+                  <input id="taskDate" name="date" type="date" required />
+                </label>
+                <label>
+                  Time
+                  <input id="taskTime" name="time" type="time" />
+                </label>
+              </div>
+              <div class="form-row three-col">
+                <label>
+                  Priority
+                  <select id="taskPriority" name="priority">
+                    <option value="high">High</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="low">Low</option>
+                  </select>
+                </label>
+                <label>
+                  Category
+                  <select id="taskCategory" name="category">
+                    <option value="work" selected>Work</option>
+                    <option value="personal">Personal</option>
+                    <option value="health">Health</option>
+                    <option value="learning">Learning</option>
+                  </select>
+                </label>
+                <label>
+                  Estimate
+                  <select id="taskDuration" name="duration">
+                    <option value="15">15 min</option>
+                    <option value="30" selected>30 min</option>
+                    <option value="60">1 hr</option>
+                    <option value="90">90 min</option>
+                    <option value="120">2 hr</option>
+                  </select>
+                </label>
+              </div>
+              <label>
+                Notes
+                <textarea id="taskNotes" name="notes" rows="3" maxlength="240" placeholder="Define scope, owners, and blockers"></textarea>
+              </label>
+              <button class="primary-button" type="submit">Save task</button>
+            </form>
+          </section>
+
+          <section class="panel focus-panel">
+            <div class="task-list-header">
+              <h2>Focus forecast</h2>
+              <button id="focusModeBtn" class="secondary-button" type="button">Refresh insight</button>
+            </div>
+            <p id="focusHeadline" class="focus-headline"></p>
+            <p id="focusNarrative" class="focus-narrative"></p>
+            <div id="energyStrip" class="energy-strip"></div>
+          </section>
+
+          <section class="panel task-list-panel">
+            <div class="task-list-header responsive-stack">
+              <div>
+                <h2>Tasks for <span id="taskListDateLabel"></span></h2>
+                <p class="subtle-text">Filter and search tasks without losing your selected day.</p>
+              </div>
+              <button id="clearCompletedBtn" class="ghost-button" type="button">Clear completed</button>
+            </div>
+
+            <div class="filter-row">
+              <label>
+                Search
+                <input id="searchInput" type="search" placeholder="Search title or notes" />
+              </label>
+              <label>
+                Category
+                <select id="categoryFilter">
+                  <option value="all">All</option>
+                  <option value="work">Work</option>
+                  <option value="personal">Personal</option>
+                  <option value="health">Health</option>
+                  <option value="learning">Learning</option>
+                </select>
+              </label>
+              <label>
+                Status
+                <select id="statusFilter">
+                  <option value="all">All</option>
+                  <option value="open">Open</option>
+                  <option value="done">Completed</option>
+                </select>
+              </label>
+            </div>
+
+            <ul id="taskList" class="task-list"></ul>
+            <p id="emptyState" class="empty-state">No tasks match this day and filter combination yet.</p>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <template id="taskTemplate">
+      <li class="task-card">
+        <div class="task-card-top">
+          <label class="task-main">
+            <input class="task-complete" type="checkbox" />
+            <span class="task-copy">
+              <strong class="task-title"></strong>
+              <span class="task-notes"></span>
+            </span>
+          </label>
+          <button class="delete-task ghost-button" type="button">Delete</button>
+        </div>
+        <div class="task-footer">
+          <div class="task-badges">
+            <span class="priority-pill"></span>
+            <span class="category-pill"></span>
+          </div>
+          <span class="task-time"></span>
+        </div>
+      </li>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
