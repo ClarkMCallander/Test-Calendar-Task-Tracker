@@ -1,22 +1,25 @@
 # Test-Calendar-Task-Tracker
 
-A lightweight calendar and task tracking web app built with plain HTML, CSS, and JavaScript.
+Momentum Planner is a lightweight browser-based calendar and task tracking app built with plain HTML, CSS, and JavaScript.
 
-## Features
+## What is included
 
-- Monthly calendar view with today and selected-date highlighting.
-- Create tasks for any selected day.
-- Mark tasks complete or delete them.
-- Filter the selected day's tasks by all/open/completed.
-- Priority badges and dashboard summary cards.
-- Local storage persistence so tasks remain after refreshes.
+- Month-view calendar with workload labels and overdue highlighting.
+- Task creation with date, optional time, priority, category, duration estimate, and notes.
+- Per-day task list with search, category filtering, and status filtering.
+- Summary cards for total tasks, due today, completion rate, and streak tracking.
+- A unique **Focus Forecast** panel that analyzes the next 7 days and recommends the best deep-work window based on task load and urgency.
+- Local storage persistence so tasks survive refreshes.
+- Sample workspace data for demos.
 
 ## Run locally
 
-Because this project is fully static, you can open `index.html` directly in a browser, or serve the folder with a simple local server:
+Because this is a static app, you can open `index.html` directly in a browser or serve the repository with a simple static server.
+
+### Python
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Then visit `http://localhost:8000`.
+Then open <http://localhost:8000>.
